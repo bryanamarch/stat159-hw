@@ -1,5 +1,5 @@
 #Loading data
-advertising <- read.csv("http://www-bcf.usc.edu/~gareth/ISL/Advertising.csv")
+advertising <- read.csv("data/Advertising.csv")
 
 
 #Creating the summary text file
