@@ -1,0 +1,18 @@
+---
+title: "Simple Regression Analysis"
+author: "Bryana Gutierrez"
+date: "October 7, 2016"
+output: html_document
+---
+
+#Abstract 
+
+#Introduction
+
+#Data
+
+#Methodology 
+
+#Results 
+
+#Conclusion
