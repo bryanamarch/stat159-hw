@@ -3,7 +3,7 @@ advertising <- read.csv("data/Advertising.csv")
 
 
 #Creating the summary text file
-sink(file = "data/eda_output.txt")
+sink(file = "data/eda-output.txt")
 cat("These are the summary statistics for TV advertising budgets\n")
 summary(advertising$TV)
 cat("\nThese are the summary statistics for product sales\n")
