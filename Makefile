@@ -13,7 +13,7 @@ data:
 	curl(http://www-bcf.usc.edu/~gareth/ISL/Advertising.csv) > $(Ad)
 
 
-$(rep): $(rmd)
+$(rep): $(rmd) $(regdat) 
 	Rscript -e "library(rmarkdown); render('$(rmd)')"
 
 $(regdat): code/regression-script.R 
