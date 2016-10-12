@@ -11,7 +11,7 @@ residual_sum_squares <- function(x){
 #This function calculates the tSS or the total sum of squares. 
 #This is the sum of the squared difference between the fitted values and their mean. 
 total_sum_squares <- function(x){
-  sum((x$fitted.values-mean(x$fitted.values))^2) 
+  sum((x$model[ ,1]-mean(x$model[ ,1]))^2) 
 }
 
 #This function calculates the R^2 statistic which is calculated from the TSS and RSS. 
@@ -25,12 +25,12 @@ r_squared <- function(x){
 #explanatory variables in the model and n is the number of data samples.
 f_statistic <- function(x){
   top <- (total_sum_squares(x) - residual_sum_squares(x))/(x$rank-1)
-  bottom <- residual_sum_squares(x)/x$df.residuals
+  bottom <- residual_sum_squares(x)/x$df.residual
   top/bottom
 }
 
 #This function calculates the RSE using the RSS. The RSE is thw square root of the RSS/(n-p-1)
 #where n and p are as defined above.
 residual_std_error <- function(x){
-  sqrt(residual_sum_squares(x)/x$df.residuals)
+  sqrt(residual_sum_squares(x)/x$df.residual)
 }
