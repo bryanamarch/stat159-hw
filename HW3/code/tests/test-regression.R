@@ -1,3 +1,6 @@
+#Loading the appropriate packages
+library(testthat)
+
 #Here I initialize the values that I will be using to test my regression functions. 
 reg <- lm(mpg ~ disp + hp, data = mtcars)
 regsum <- summary(reg)
