@@ -9,7 +9,7 @@ residual_sum_squares <- function(x){
 }
 
 #This function calculates the tSS or the total sum of squares. 
-#This is the sum of the squared difference between the fitted values and their mean. 
+#This is the sum of the squared difference between the y values and their mean. 
 total_sum_squares <- function(x){
   sum((x$model[ ,1]-mean(x$model[ ,1]))^2) 
 }
