@@ -18,7 +18,7 @@ sink()
 
 #Saving the correlation matrix in the RData file correlation-matrix.RData
 Cor <- cor(advertising)
-Cor[lower.tri(Cor)] <- 0
+Cor[lower.tri(Cor)] <- NA
 save(Cor, file = "data/correlation-matrix.RData")
 
 #Creating histograms and loading them to the images folder. 
