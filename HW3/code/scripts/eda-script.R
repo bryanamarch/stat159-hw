@@ -22,7 +22,7 @@ Cor[lower.tri(Cor)] <- NA
 save(Cor, file = "data/correlation-matrix.RData")
 
 #Creating histograms and loading them to the images folder. 
-require(ggplot2)
+library(ggplot2)
 
 png(filename = "images/histogram-sales.png")
 ggplot(data = advertising) +

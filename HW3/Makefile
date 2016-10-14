@@ -1,30 +1,33 @@
-.PHONY: all data clean tests eda regression report
+.PHONY: all data clean tests eda regression report sesh
 
 rep = report/report.pdf
-edao = data/eda-output.txt
 regdat = data/regression.RData
 Ad = data/Advertising.csv
 rmd = report/report.Rmd
+rep_html = report/report.html
 
-all: eda regression report
+all: eda regression report sesh
 
 
 data:
 	curl "http://www-bcf.usc.edu/~gareth/ISL/Advertising.csv" > $(Ad)
 
-testa: 
-	Rscript test-that.R 
+tests: 
+	Rscript code/test-that.R
 
 report: $(rmd) $(regdat)
-	Rscript -e "library(rmarkdown); render('$(rmd)')"
+	Rscript -e "library(rmarkdown); render('$(rmd)', output_format = 'pdf_document'); render('$(rmd)', output_format = 'html_document')"
 
-$(regdat): code/regression-script.R
-	Rscript -e "source('code/regression-script.R')"
+regression: 
+	Rscript code/scripts/regression-script.R
 
-$(edao): code/eda-script.R
-	Rscript -e "source('code/eda-script.R')"
+eda: 
+	Rscript code/scripts/eda-script.R
+
+sesh: 
+	Rscript code/scripts/session-info-script.R
 
 clean:
-	rm -f $(rep)
+	rm -f $(rep) $(rep_html)
 
 

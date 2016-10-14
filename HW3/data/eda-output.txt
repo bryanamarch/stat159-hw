@@ -13,3 +13,11 @@ These are the summary statistics for Radio advertising budgets
 These are the summary statistics for Newpaper advertising budgets
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
    0.30   12.75   25.75   30.55   45.10  114.00 
+
+This is the correlation matrix for all of the variables
+                    X         TV       Radio   Newspaper       Sales
+X          1.00000000 0.01771469 -0.11068044 -0.15494414 -0.05161625
+TV         0.01771469 1.00000000  0.05480866  0.05664787  0.78222442
+Radio     -0.11068044 0.05480866  1.00000000  0.35410375  0.57622257
+Newspaper -0.15494414 0.05664787  0.35410375  1.00000000  0.22829903
+Sales     -0.05161625 0.78222442  0.57622257  0.22829903  1.00000000
