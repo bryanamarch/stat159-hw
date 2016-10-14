@@ -8,7 +8,7 @@ regsum <- summary(reg)
 #loading in the functions to be tested.
 source("../functions/regression-functions.R")
 
-context("Testing the function in regression-functions.R that calculate regression statistics")
+context("Testing the functions in regression-functions.R that calculate regression statistics")
 test_that("Testing residual_sum_squares function to see if correctly calculates RSS", {
 	expect_equal(residual_sum_squares(reg), sum(reg$residuals^2))
 	expect_length(residual_sum_squares(reg), 1)
