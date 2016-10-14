@@ -1,0 +1,139 @@
+---
+title: "Multiple Linear Regression Analysis"
+author: "Bryana Gutierrez"
+date: "October 14, 2016"
+output: pdf_document
+---
+
+```{r, echo=FALSE, include = FALSE}
+advertising <- read.csv("../data/Advertising.csv")
+source("../code/functions/regression-functions.R")
+load("../data/regression.RData")
+load("../data/correlation-matrix.RData")
+
+require(xtable)
+require(png)
+require(grid)
+
+#Creating variables to be used later: 
+
+#reduced models
+ls_TV <- lm(Sales ~ TV, data = advertising)
+ls_Radio <- lm(Sales ~ Radio, data = advertising)
+ls_News <- lm(Sales ~ Newspaper, data = advertising)
+
+#F-test for the full model to get the p-value.
+anov <- anova(lm(Sales ~ NULL, advertising), ls_reg)
+p_val <- anov$`Pr(>F)`[2]
+
+#Computing the p-values of the beta_1 in the reduced models
+p_val_tv <- summary(ls_TV)$coefficients[2,4]
+p_val_radio <- summary(ls_Radio)$coefficients[2,4]
+p_val_news <- summary(ls_News)$coefficients[2,4]
+```
+#Abstract 
+The analysis is an attempt to reproduce the results found in Section 3.2 of *Multiple Linear Regression* (chapter 3) of the book **An Introduction to Statistical Learning**. This is an exploration of Multiple Linear Regression. 
+
+#Introduction
+This analysis takes Advertising data and attempts to map a linear relationship between various advertising budget (TV, radio, and newspaper) and product sales. The best way to do this is through the method of least squares. 
+
+#Data
+In this analysis we take data from 200 distinct markets. This data is contained in `Advertising.csv` which has five variables: `X` a counter, `Sales` the product sales in thousands of units, and `TV`, `Radio`, and `Newspaper` the advertising budgets for each medium in thousands of dollars. In this multiple linear regression case, we look at how all three advertising budgets, `TV`, `Radio`, and `Newspaper`, correlate to `Sales`. 
+
+#Methodology 
+As the title of this report suggests, this is a multiple linear regression analysis. We use the linear model $$y \approx \beta_0 + \beta_1*x_1 + \beta_2*x_2 + \beta_3*x_3$$ to describe the relationship between `Sales`, `TV`, `Radio`, and `Newspaper`. Therefore, the linear model looks more like this: $$Sales \approx \beta_0 + \beta_1*TV + \beta_2*Radio + \beta_3*Newspaper$$ where $\beta_0$ is the intercept term and the $\beta_is$ describe how each advertising budget affects the sales. As mentioned before, the best way to estimate the variables in this model is through the least squares method. 
+$$\hat{\beta} = \begin{bmatrix}
+\hat{\beta_0}\\
+\hat{\beta_1}\\
+\hat{\beta_2}\\
+\hat{\beta_3}
+\end{bmatrix}$$
+is the least squares estimate of $\beta$ which contains the actual values of the $\beta_is$. By the Gauss-Markov Theorem they are the best linear unbiased estimators. They are estimated by minimizing the sum of the residual squared errors (RSS): $$RSS = e^2_1+e^2_2+ \cdots +e^2_n$$ where $e_i$ is equal to $y_i-\hat{y_i}$.  $\hat{y_i}$ is calculated by using the model and $\hat{\beta}$: $$\hat{y_i} = X\hat{\beta}$$ where $$X = \begin{bmatrix}
+1 & x_{1,1} & x_{1,2} & x_{1,3}\\
+1 & x_{2,1} & x_{2,2} & x_{2,3}\\
+\vdots & \vdots & \vdots & \vdots \\
+1 & x_{200,1} & x_{200,2} & x_{200,3}\\
+\end{bmatrix}$$
+$\hat{y_i}$ is the predicted y value. In terms of this analysis, $\hat{y_i}$ is the amount of predicted sales based off of the all the different advertising budgets.Basically, minimizing the RSS would be minimizing the error of the prediction. 
+
+RSS can also be written as: $$RSS = \displaystyle\sum_{i=1}^{n} (y_i-\hat{\beta_0}-\hat{\beta_1}*x_{i,1}-\hat{\beta_2}*x_{i,2}-\hat{\beta_3}*x_{i,3})$$ Minimizing this value over the $\hat{\beta_i}s$ results in $$\hat{\beta} = (X^TX)^{-1}X^TY$$ where Y is a vector with all the y values. Using the `Advertising.csv` data we replace the $y_is$ with the `Sales` numbers, the $x_{i,1}$ with the `TV` numbers, the $x_{i,2}$ with the `Radio` numbers, and the $x_{i,3}$ with the `Newspaper` numbers. 
+
+#Results 
+Using R we find the values for $\hat{\beta}$ and information about their accuracy. First, we look at how each advertising budget affects `Sales` on its own. 
+
+##TV  vs. Sales 
+Looking at the `TV` and `Sales` data, we perform a simple linear regression. $Sales \approx \beta_0 + \beta_1*TV$. **Table 1** is the output for what R calculates for the estimates of these $\beta$ values.
+
+```{r, results = "asis", echo = FALSE}
+print(xtable(ls_TV, caption = "Information About Regression Coefficients in a Reduced Model"), type = "latex", comment = FALSE)
+```
+This the scatter plot with the best fit regression line that uses the coefficients above.
+
+```{r fig.width = 5, fig.height = 3, fig.align = "center", echo = FALSE}
+img <- readPNG("../images/scatterplot-tv-sales.png")
+grid.raster(img)
+```
+
+##Radio  vs. Sales 
+Looking at the `Radio` and `Sales` data, we perform a simple linear regression. $Sales \approx \beta_0 + \beta_1*Radio$. **Table 2** is the output for what R calculates for the estimates of these $\beta$ values.
+
+```{r, results = "asis", echo = FALSE}
+print(xtable(ls_Radio, caption = "Information About Regression Coefficients in a Reduced Model"), type = "latex", comment = FALSE)
+```
+This the scatter plot with the best fit regression line that uses the coefficients above.
+
+```{r fig.width = 5, fig.height = 3, fig.align = "center", echo = FALSE}
+img <- readPNG("../images/scatterplot-radio-sales.png")
+grid.raster(img)
+```
+
+##Newspaper  vs. Sales 
+Looking at the `Newspaper` and `Sales` data, we perform a simple linear regression. $Sales \approx \beta_0 + \beta_1*Newspaper$. **Table 3** is the output for what R calculates for the estimates of these $\beta$ values.
+
+```{r, results = "asis", echo = FALSE}
+print(xtable(ls_News, caption = "Information About Regression Coefficients in a Reduced Model"), type = "latex", comment = FALSE)
+```
+This the scatter plot with the best fit regression line that uses the coefficients above.
+
+```{r fig.width = 5, fig.height = 3, fig.align = "center", echo = FALSE}
+img <- readPNG("../images/scatterplot-newspaper-sales.png")
+grid.raster(img)
+```
+
+##Full Model
+Now we look at the entire multiple linear model. **Table 4** is a table of the $\hat{\beta_i}$ that we found using the method described earlier: $(X^TX)^{-1}X^TY$. This table also includes information about the accuracy of these estimates. 
+
+```{r, results = "asis", echo = FALSE}
+print(xtable(ls_reg, caption = "Information About Regression Coefficients in the Full Model"), type = "latex", comment = FALSE)
+```
+`Std. Error` is a measure of the volatility of the estimates and the last two columns are indicators of the validity of the estimate. In this case since the p-values (the last column) are practically zero for all the $\hat{\beta_i}s$ expect for newspaper. This indicates that the estimates for $\hat{\beta_0}$, $\hat{\beta_1}$, and $\hat{\beta_2}$ are validly nonzero. However, the estimate for $\hat{\beta_4}$ has more of a change of being zero and not affecting the model. From this we can tell that `TV` and `Radio` are better predictors of `Sales` than `Newspaper` is. 
+
+##Analyzing The Estimates
+The following statistics validate the accuracy of the linear model $$Sales \approx \beta_0 + \beta_1*TV + \beta_2*Radio + \beta_3*Newspaper$$ One example of such a measure is the correlation matrix. This matrix contains the covariances of each $\hat{\beta_i}$ with every other $\hat{\beta_i}$. Note that the covariance of $\hat{\beta_i}$ with itself is just the variance of $\hat{\beta_i}$. The covariance matrix can be seen in **Table 5**
+
+```{r, results = "asis", echo = FALSE}
+tb <- xtable(Cor, caption = "Covariance Matrix")
+align(tb) <- rep("c", ncol(Cor)+1)
+print(tb, type = "latex", comment = FALSE)
+```
+
+##Analyzing the Model
+More examples of measures of accuracy of the model are the $RSE$ (residual standard error), $R^2$ statistic, and $F-Statistic$. **Table 6** shows these values. 
+```{r, results = "asis", echo = FALSE}
+data <- c(residual_std_error(ls_reg), r_squared(ls_reg), f_statistic(ls_reg))
+lbls <- c("RSE", "R2", "F-Stat")
+fit_anl <- data.frame(Quantity = lbls, Value = data)
+
+print(xtable(fit_anl, caption = "Regression Quality Statistics"), type = "latex", include.rownames = FALSE, comment = FALSE)
+```
+###RSE
+`RSE` is the residual standard error, which is a measure of the accuracy of the predicted values of `Sales` that you can get from the model. In mathematical terms, this is $$RSE = \sqrt{\frac{1}{n-2} RSS} = \sqrt{\frac{1}{n-2} \displaystyle\sum_{i=1}^{n} (y_i-\hat{y_i})^2}$$ This adds the differences between the actual and predicted values of the y's which in this case is the `Sales` numbers. `RSE` equal to `r residual_std_error(ls_reg)` indicates that the predicted `Sales` number is off by approximately `r residual_std_error(ls_reg)*1000` units.
+
+###R Squared
+The $R^2$ statistic measures proportionally how much of the variability of `Sales` can be due to `TV`, `Radio`, and `Newspaper`. Mathematically, $$R^2 = \frac{TSS-RSS}{RSS} = 1-\frac{RSS}{TSS}$$ where $TSS = \sum_{i=1}^{n}(y_i-\bar y)^2$. The closer the $R^2$ statistic is to one, the better the multiple linear model is at modeling `Sales`. In this case the $R^2$ statistic is `r r_squared(ls_reg)`, so it is pretty close to one. 
+
+###F-Statistic
+The F-Statistic is a measure of how good the model is. It uses the `RSS` and the `TSS` just like the $R^2$ statistic, but also incorporates the F distribution. Mathematically, the F-statistic is $$F-Stat = \frac{(TSS - RSS)/p}{RSS/(n-p-1)}$$ The p-value for this F-statistic is $`r p_val`$ which is much smaller than any of the p-values for each of the $\hat{\beta_i}s$. This is also much smaller than the p-values computed in the simple linear regression that assess the variables `TV`, `Radio`, and `Newspaper` for their ability to predict the response variable, `Sales`. These p-values are $`r p_val_tv`$ for `TV`, $`r p_val_radio`$ for `Radio`, and $`r p_val_news`$ for `Newspaper`. Therefore, although individually, the variables are decent predictors of `Sales`, collectively, they are better. 
+
+#Conclusion
+Using the statistics on the $\hat{\beta_i}s$, the model analysis, and the visual representations of the least squares fitted line, we can see that the model $Sales \approx \beta_0 + \beta_1*TV + \beta_2*Radio +\beta_3*Newspaper$ was a reasonable assumption. 
